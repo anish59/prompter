@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="bbt.com.prompter.ContactsListingActivity">
 
+    <include layout="@layout/material_toolbar" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvContacts"

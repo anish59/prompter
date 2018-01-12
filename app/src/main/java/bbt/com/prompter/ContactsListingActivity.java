@@ -2,13 +2,19 @@ package bbt.com.prompter;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +27,8 @@ public class ContactsListingActivity extends AppCompatActivity {
     private List<ContactsModel> contacts;
     private android.support.v7.widget.RecyclerView rvContacts;
     private ContactAdapter contactAdapter;
+    private MaterialSearchView materialSearchView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +36,45 @@ public class ContactsListingActivity extends AppCompatActivity {
         context = this;
         setContentView(R.layout.activity_contacts_listing);
         rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        materialSearchView = (MaterialSearchView) findViewById(R.id.search_view);
         init();
+        initToolbar();
+        initListener();
+    }
+
+    private void initToolbar() {
+        if (toolbar != null) {
+            toolbar.setTitle("Contacts");
+        }
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                Intent intent = new Intent(ContactsListingActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initListener() {
+        materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.e("onQueryTextSubmit", query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (contacts.size() > 0) {
+
+                }
+                return false;
+            }
+        });
     }
 
     private void initAdapter() {
@@ -58,7 +104,7 @@ public class ContactsListingActivity extends AppCompatActivity {
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
 
                 if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? and " + ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " = ?", new String[]{id,"A"}, null);
                     while (pCur.moveToNext()) {
                         String contactNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         String name = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
