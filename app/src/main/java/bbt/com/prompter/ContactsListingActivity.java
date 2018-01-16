@@ -100,22 +100,26 @@ public class ContactsListingActivity extends AppCompatActivity {
         Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
         ArrayList<ContactsModel> allContacts = new ArrayList<ContactsModel>();
         if (cursor.moveToFirst()) {
-            do {
-                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+            try {
+                do {
+                    String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
 
-                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
-                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? and " + ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " = ?", new String[]{id,"A"}, null);
-                    while (pCur.moveToNext()) {
-                        String contactNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        String name = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        String imgUri = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
-                        allContacts.add(new ContactsModel(name, contactNumber, imgUri));
-                        break;
+                    if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? and " + ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " LIKE ?", new String[]{id, "%an%"}, null);
+                        while (pCur.moveToNext()) {
+                            String contactNumber = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            String name = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                            String imgUri = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+                            allContacts.add(new ContactsModel(name, contactNumber, imgUri));
+                            break;
+                        }
+                        pCur.close();
                     }
-                    pCur.close();
-                }
 
-            } while (cursor.moveToNext());
+                } while (cursor.moveToNext());
+            } catch (Exception e) {
+                Log.e("Errrrrrr", e.getMessage());
+            }
         }
         return allContacts;
     }

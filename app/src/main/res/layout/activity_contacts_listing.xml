@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="bbt.com.prompter.ContactsListingActivity">
 
     <include layout="@layout/material_toolbar" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvContacts"
+        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="2dp">
