@@ -8,6 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import bbt.com.iconiccardview.widgets.CircleImageView;
@@ -23,14 +28,16 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     private List<ContactsModel> contactsList;
     private ContactClickListener contactClickListener;
 
-    public void setAndNotifyItems(Context context, List<ContactsModel> contactsList, ContactClickListener contactClickListener) {
+    public ContactAdapter(Context context, ContactClickListener contactClickListener) {
         this.context = context;
-        this.contactsList = contactsList;
         this.contactClickListener = contactClickListener;
     }
 
-    public ContactAdapter(Context context) {
-        this.context = context;
+    public void setAndNotifyItems(List<ContactsModel> contactsList) {
+        this.contactsList = new ArrayList<>();
+        this.contactsList = contactsList;
+        notifyDataSetChanged();
+
     }
 
 
@@ -44,6 +51,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.txtContactName.setText(contactsList.get(position).getName());
         holder.txtContactNumber.setText(contactsList.get(position).getNumber());
+        Glide.with(context).load(contactsList.get(position).getImgUri())
+                .apply(new RequestOptions().placeholder(R.drawable.ic_avatar).error(R.drawable.ic_avatar))
+                .thumbnail(0.5f)
+                .into(holder.contactImage);
+
         final int pos = position;
         holder.txtContactName.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +67,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return contactsList.size();
+        return (contactsList != null && contactsList.size() > 0) ? contactsList.size() : 0;
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
