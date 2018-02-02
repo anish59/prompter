@@ -13,5 +13,6 @@ public class UiHelper {
     public static void initToolbar(final AppCompatActivity activity, Toolbar toolbar, String title) {
         toolbar.setTitle(title);
         toolbar.setTitleTextColor(Color.WHITE);
+
     }
 }

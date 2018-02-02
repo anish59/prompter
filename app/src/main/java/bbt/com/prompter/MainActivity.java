@@ -1,5 +1,7 @@
 package bbt.com.prompter;
 
+import android.Manifest;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,11 +14,14 @@ import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import bbt.com.prompter.fragments.HistoryFragment;
 import bbt.com.prompter.fragments.TemplateFragment;
+import bbt.com.prompter.helper.FunctionHelper;
 import bbt.com.prompter.helper.UiHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private android.support.v7.widget.Toolbar toolbar;
     private android.support.design.widget.TabLayout tabs;
     private android.support.v4.view.ViewPager viewpager;
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context=this;
         init();
-//        initListeners();
+        askPermissions();
+    //        initListeners();
     }
 
     private void init() {
@@ -98,4 +105,19 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+    private void askPermissions() {
+        FunctionHelper.setPermission(context, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+
+            }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                //do nothing
+            }
+        });
+
+    }
+
 }

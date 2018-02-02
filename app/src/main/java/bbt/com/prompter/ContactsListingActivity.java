@@ -1,5 +1,6 @@
 package bbt.com.prompter;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +20,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import bbt.com.prompter.adapters.ContactAdapter;
+import bbt.com.prompter.helper.FunctionHelper;
 import bbt.com.prompter.model.ContactsModel;
 
 public class ContactsListingActivity extends AppCompatActivity {
@@ -39,14 +44,20 @@ public class ContactsListingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        setContentView(R.layout.activity_contacts_listing);
-        rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        materialSearchView = (MaterialSearchView) findViewById(R.id.search_view);
+        initViews();
 
         init();
         initToolbar();
         initListener();
+    }
+
+
+
+    private void initViews() {
+        setContentView(R.layout.activity_contacts_listing);
+        rvContacts = (RecyclerView) findViewById(R.id.rvContacts);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        materialSearchView = (MaterialSearchView) findViewById(R.id.search_view);
     }
 
     private void initToolbar() {
@@ -69,13 +80,16 @@ public class ContactsListingActivity extends AppCompatActivity {
         materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                new BackProcess(query).execute();
+//                new BackProcess(query).execute();
+                contactAdapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                new BackProcess(newText).execute();
+            public boolean onQueryTextChange(String query) {
+//                new BackProcess(newText).execute();
+                contactAdapter.getFilter().filter(query);
+
                 return false;
             }
         });
@@ -212,14 +226,16 @@ public class ContactsListingActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             if (!isQuery) {
-                progressDialog.show();
+                if (!progressDialog.isShowing()) {
+                    progressDialog.show();
+                }
             }
         }
 
         @Override
         protected String doInBackground(String... strings) {
             if (isQuery) {
-                List<ContactsModel> filteredContacts=new ArrayList<>();
+                List<ContactsModel> filteredContacts = new ArrayList<>();
             } else {
                 contacts = getAllContacts();
             }
