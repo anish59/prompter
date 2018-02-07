@@ -38,4 +38,7 @@ public class ContactsModel {
     public void setImgUri(String imgUri) {
         this.imgUri = imgUri;
     }
+
+
+
 }

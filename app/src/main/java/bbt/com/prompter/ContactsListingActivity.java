@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import bbt.com.prompter.adapters.ContactAdapter;
 import bbt.com.prompter.helper.FunctionHelper;
+import bbt.com.prompter.model.ContactTable;
 import bbt.com.prompter.model.ContactsModel;
 
 public class ContactsListingActivity extends AppCompatActivity {
@@ -50,7 +52,6 @@ public class ContactsListingActivity extends AppCompatActivity {
         initToolbar();
         initListener();
     }
-
 
 
     private void initViews() {
@@ -100,8 +101,12 @@ public class ContactsListingActivity extends AppCompatActivity {
     private void initAdapter() {
         contactAdapter = new ContactAdapter(context, new ContactAdapter.ContactClickListener() {
             @Override
-            public void onItemClicked(String name) {
+            public void onItemClicked(String name, String phoneNo) {
                 Toast.makeText(context, "Name Clicked: " + name, Toast.LENGTH_SHORT).show();
+                ContactTable contactTable = new ContactTable(phoneNo, name, "Blah blah", "9.20 am", 0, 0);
+                contactTable.addContact(contactTable, ContactsListingActivity.this);
+                Log.e("ContactData:", new Gson().toJson(contactTable.getContact(2, ContactsListingActivity.this)));
+
             }
         });
         rvContacts.setLayoutManager(new LinearLayoutManager(context));

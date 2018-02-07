@@ -40,7 +40,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         this.originalContactList = contactsList;
         this.contactListItems = contactsList;
         notifyDataSetChanged();
-}
+    }
 
 
     @Override
@@ -62,7 +62,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         holder.txtContactName.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactClickListener.onItemClicked(contactListItems.get(pos).getName());
+                contactClickListener.onItemClicked(contactListItems.get(pos).getName(), contactListItems.get(pos).getNumber());
             }
         });
     }
@@ -89,7 +89,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     }
 
     public interface ContactClickListener {
-        void onItemClicked(String name);
+        void onItemClicked(String name, String phoneNo);
     }
 
 
