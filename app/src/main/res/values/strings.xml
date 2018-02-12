@@ -7,4 +7,11 @@
     <string name="_9988776655">9988776655</string>
     <string name="if_you_deny">If you reject permission,you can not use this service</string>
     <string name="please_turn_on_permissions">Please turn on permissions at [Setting] > [Permission]</string>
+    <string name="enter_your_template_message">Enter Your template message</string>
+    <string name="notify_time">Notify Time</string>
+    <string name="done">Done</string>
+    <string name="get_a_reminder">Get a reminder!</string>
+    <string name="send_message_directly_from_the_notification">Send Message directly from the notification!</string>
+    <string name="enter_time">Enter time</string>
+    <string name="cancel">cancel</string>
 </resources>

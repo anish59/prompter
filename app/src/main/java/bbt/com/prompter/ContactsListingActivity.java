@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bbt.com.prompter.adapters.ContactAdapter;
+import bbt.com.prompter.dialogs.AddTemplateMsgDialog;
 import bbt.com.prompter.helper.FunctionHelper;
 import bbt.com.prompter.model.ContactTable;
 import bbt.com.prompter.model.ContactsModel;
@@ -51,6 +52,8 @@ public class ContactsListingActivity extends AppCompatActivity {
         init();
         initToolbar();
         initListener();
+        ContactTable contactTable = new ContactTable();
+        Log.e("AllContactData:", new Gson().toJson(contactTable.getAllContacts(context)));
     }
 
 
@@ -103,10 +106,7 @@ public class ContactsListingActivity extends AppCompatActivity {
             @Override
             public void onItemClicked(String name, String phoneNo) {
                 Toast.makeText(context, "Name Clicked: " + name, Toast.LENGTH_SHORT).show();
-                ContactTable contactTable = new ContactTable(phoneNo, name, "Blah blah", "9.20 am", 0, 0);
-                contactTable.addContact(contactTable, ContactsListingActivity.this);
-                Log.e("ContactData:", new Gson().toJson(contactTable.getContact(2, ContactsListingActivity.this)));
-
+                new AddTemplateMsgDialog(context);
             }
         });
         rvContacts.setLayoutManager(new LinearLayoutManager(context));

@@ -6,4 +6,5 @@
     <color name="colorAccent">#43A047</color>
     <color name="colorWhite">#ffffff</color>
     <color name="dullWhite">#43A047</color>
+    <color name="midGrey">#3C3F41</color>
 </resources>

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bbt.com.prompter.DBHelper.DataBaseHandler;
 
 /**
@@ -20,7 +23,7 @@ public class ContactTable {
     public long createdDateInt;
     public long updatedDateInt;
     //total field 7 (0 to 6)
-    private static boolean isIdManual = false;
+    private boolean isIdManual = false;
 
     public static final String tableName = ContactTable.class.getSimpleName();
 
@@ -143,6 +146,35 @@ public class ContactTable {
         ContactTable contact = new ContactTable(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getLong(4), cursor.getLong(5));
         // return contact
         return contact;
+    }
+
+
+    public List<ContactTable> getAllContacts(Context context) {
+        List<ContactTable> contactList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + tableName;
+
+        SQLiteDatabase db = new DataBaseHandler(context).getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ContactTable contact = new ContactTable();
+                contact.setContactId(Integer.parseInt(cursor.getString(0)));
+                contact.setNumber(cursor.getString(1));
+                contact.setName(cursor.getString(2));
+                contact.setTemplate(cursor.getString(3));
+                contact.setNotifyTime(cursor.getString(4));
+                contact.setCreatedDateInt(cursor.getLong(5));
+                contact.setUpdatedDateInt(cursor.getLong(6));
+                // Adding contact to list
+                contactList.add(contact);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        return contactList;
     }
 
 }
