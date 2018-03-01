@@ -74,8 +74,6 @@ public class ContactsListingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                Intent intent = new Intent(ContactsListingActivity.this, MainActivity.class);
-                startActivity(intent);
             }
         });
     }
@@ -85,14 +83,14 @@ public class ContactsListingActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
 //                new BackProcess(query).execute();
-                contactAdapter.getFilter().filter(query);
+                contactAdapter.getFilter().filter(query.trim());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
 //                new BackProcess(newText).execute();
-                contactAdapter.getFilter().filter(query);
+                contactAdapter.getFilter().filter(query.trim());
 
                 return false;
             }
@@ -104,9 +102,9 @@ public class ContactsListingActivity extends AppCompatActivity {
     private void initAdapter() {
         contactAdapter = new ContactAdapter(context, new ContactAdapter.ContactClickListener() {
             @Override
-            public void onItemClicked(String name, String phoneNo) {
+            public void onItemClicked(String name, String phoneNo, String imgUri) {
                 Toast.makeText(context, "Name Clicked: " + name, Toast.LENGTH_SHORT).show();
-                new AddTemplateMsgDialog(context);
+                new AddTemplateMsgDialog(context, ContactsListingActivity.this, name, phoneNo, imgUri);
             }
         });
         rvContacts.setLayoutManager(new LinearLayoutManager(context));

@@ -62,7 +62,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         holder.txtContactName.getRootView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contactClickListener.onItemClicked(contactListItems.get(pos).getName(), contactListItems.get(pos).getNumber());
+                contactClickListener.onItemClicked(contactListItems.get(pos).getName()
+                        , contactListItems.get(pos).getNumber()
+                        , contactListItems.get(position).getImgUri());
             }
         });
     }
@@ -87,11 +89,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             contactImage = (CircleImageView) itemView.findViewById(R.id.contactImage);
         }
     }
-
-    public interface ContactClickListener {
-        void onItemClicked(String name, String phoneNo);
-    }
-
 
     @Override
     public Filter getFilter() {
@@ -128,6 +125,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             }
         };
         return filter;
+    }
+
+
+    public interface ContactClickListener {
+        void onItemClicked(String name, String phoneNo,String imgUri);
     }
 
 }

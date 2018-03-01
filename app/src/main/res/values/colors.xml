@@ -5,6 +5,6 @@
     <color name="colorPrimaryDark_2">#43A047</color>
     <color name="colorAccent">#43A047</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="dullWhite">#43A047</color>
+    <color name="dullWhite">#E3E3E3</color>
     <color name="midGrey">#3C3F41</color>
 </resources>

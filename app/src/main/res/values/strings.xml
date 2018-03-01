@@ -15,4 +15,6 @@
     <string name="enter_time">Enter time</string>
     <string name="cancel">cancel</string>
     <string name="daily_notify_me">Daily Notify Me</string>
+    <string name="opps">Opps!</string>
+    <string name="nothing_found">Nothing Found !!</string>
 </resources>

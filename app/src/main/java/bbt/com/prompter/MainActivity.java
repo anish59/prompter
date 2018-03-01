@@ -31,13 +31,14 @@ public class MainActivity extends AppCompatActivity {
     private android.support.design.widget.TabLayout tabs;
     private android.support.v4.view.ViewPager viewpager;
     private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context=this;
+        context = this;
         init();
         askPermissions();
-    //        initListeners();
+        //        initListeners();
     }
 
     private void init() {
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
     private void askPermissions() {
         FunctionHelper.setPermission(context, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, new PermissionListener() {
             @Override

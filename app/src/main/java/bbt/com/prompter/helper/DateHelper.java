@@ -1,6 +1,8 @@
 package bbt.com.prompter.helper;
 
 
+import android.annotation.SuppressLint;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -443,7 +445,7 @@ public final class DateHelper {
 
     public static Date parseDateToDate(String inputDate, String inputPattern, String outputPattern) {
         SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.US);
-        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
         Date date = null;
 

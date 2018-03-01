@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bbt.com.iconiccardview.IconicCardView;
 import bbt.com.prompter.R;
+import bbt.com.prompter.model.ContactTable;
 
 /**
  * Created by anish on 09-01-2018.
@@ -18,6 +22,7 @@ import bbt.com.prompter.R;
 public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.MyViewHolder> {
 
     private Context context;
+    private List<ContactTable> templateList;
 
     public TemplateAdapter(Context context) {
         this.context = context;
@@ -32,18 +37,34 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.contact_view_item, null, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_contact_view, null, false);
         ImageView imgDelete = (ImageView) view.findViewById(R.id.imgDelete);
         ImageView imgEdit = (ImageView) view.findViewById(R.id.imgEdit);
         TextView txtNumber = (TextView) view.findViewById(R.id.txtNumber);
         TextView txtName = (TextView) view.findViewById(R.id.txtName);
+        TextView txtMsg = (TextView) view.findViewById(R.id.txtMsg);
+
         holder.iconicitem.addInsideView(view);
-        txtName.setText("Clara");
+
+        txtName.setText(templateList.get(position).getName());
+        txtNumber.setText(templateList.get(position).getNumber());
+        txtMsg.setText(templateList.get(position).getTemplate());
+        if (templateList.get(position).getImgUri() != null) {
+            holder.iconicitem.setIconicImage(templateList.get(position).getImgUri());
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return (templateList != null && templateList.size() > 0) ? templateList.size() : 0;
+    }
+
+    public void setItems(List<ContactTable> templateList) {
+        this.templateList = new ArrayList<>();
+        this.templateList = templateList;
+        notifyDataSetChanged();
+
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

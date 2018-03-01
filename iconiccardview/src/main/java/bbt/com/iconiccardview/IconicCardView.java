@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+
 import bbt.com.iconiccardview.widgets.CircleImageView;
 
 /**
@@ -77,12 +79,23 @@ public class IconicCardView extends LinearLayout {
         marginLayoutParams.setMargins((imgWidth / 2) - cardElevation, 0, 0, 0);
 
         cardView.setCardElevation(cardElevation);
-        ((FrameLayout.LayoutParams) insideContainer.getLayoutParams()).setMargins(imgWidth / 2+cardElevation, 0, 0, 0);
+        ((FrameLayout.LayoutParams) insideContainer.getLayoutParams()).setMargins(imgWidth / 2 + cardElevation, 0, 0, 0);
 
         cardView.setCardBackgroundColor(cardBgColor);
 //        insideContainer.setBackgroundColor(cardBgColor);
 
     }
+
+    public void setIconicImage(String glidePath) {
+        Glide.with(context).load(glidePath)
+                .thumbnail(0.5f)
+                .into(imgHolder);
+    }
+    /*public void setIconicImage(Drawable imgSrc) {
+        Glide.with(context).load(imgSrc)
+                .thumbnail(0.5f)
+                .into(imgHolder);
+    }*/
 
     public void addInsideView(View view) {
         insideContainer.removeAllViews();
