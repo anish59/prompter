@@ -7,9 +7,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
+
+import bbt.com.prompter.model.ContactTable;
 
 /**
  * Created by anish on 12-09-2017.
@@ -22,23 +25,31 @@ public class AppAlarmHelper extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action;
-        action = intent.getAction();
+//        action = intent.getAction();
 
+        if (intent == null) {
+            return;
+        }
+        int fetchingId = intent.getIntExtra(IntentConstants.CONTACT_ID, 0);
+        ContactTable contactDetail = ContactTable.getContact(fetchingId, context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationHelper.sendSimpleNotificationOreo(context, contactDetail.getName(), contactDetail.getTemplate());
+        } else {
+            NotificationHelper.sendSimpleNotificationNormal(context, contactDetail.getName(), contactDetail.getTemplate());
+        }
     }
 
 
-    public void setAlarm(Context context, int alarmID, boolean isRepeating, long timeInMilliSec) {
-        Calendar calendar = Calendar.getInstance();
-        cancelAlarm(context, alarmID);
+    public void setAlarm(Context context, int contactID, boolean isRepeating, long timeInMilliSec) {
+        cancelAlarm(context, contactID);
 
         Intent intent = new Intent(context, AppAlarmHelper.class);
-        intent.putExtra(IntentConstants.INTENT_ALARM_ID, alarmID);
+        intent.putExtra(IntentConstants.INTENT_ALARM_ID, contactID); //using alarmId same as contactId
+        intent.putExtra(IntentConstants.CONTACT_ID, contactID);
 
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, alarmID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, contactID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmMgr = getAlarmManager(context);
-        /*
-        long millis = minutes * 60 * 1000;
-        * */
+
         if (isRepeating) {
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMilliSec, AlarmManager.INTERVAL_DAY, alarmIntent);
         } else {

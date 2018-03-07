@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import bbt.com.prompter.R;
+import bbt.com.prompter.helper.AppAlarmHelper;
 import bbt.com.prompter.helper.DateHelper;
 import bbt.com.prompter.helper.UiHelper;
 import bbt.com.prompter.model.ContactTable;
@@ -151,6 +151,7 @@ public class AddTemplateMsgDialog extends Dialog {
         contactTable.setNumber(phoneNo);
         contactTable.setName(name);
         contactTable.setImgUri(imgUri);
+        Calendar calendar = DateHelper.stringToCalendar(contactTable.getNotifyTime(), DateHelper.dd_MMM_yy_hh_mm_a);
 
         if (!isEditMode) {
             createdTime = Long.parseLong(DateHelper.formatDate(new Date(), DateHelper.YYYY_MMDD_HHMMSS));
@@ -158,6 +159,9 @@ public class AddTemplateMsgDialog extends Dialog {
             contactTable.setUpdatedDateInt(createdTime); // both will be created time as it is a new fresh entry
 
             ContactTable.addContact(contactTable, context);
+
+
+            setNotification(calendar.getTimeInMillis());
         } else {
             long updatedTime = Long.parseLong(DateHelper.formatDate(new Date(), DateHelper.YYYY_MMDD_HHMMSS));
             contactTable.setCreatedDateInt(createdTime);
@@ -166,8 +170,19 @@ public class AddTemplateMsgDialog extends Dialog {
             contactTable.setContactId(contactId);
             ContactTable.updateContact(contactTable, context);
             dataUpdatedListener.onUpdated();
+
+            setNotification(calendar.getTimeInMillis());
         }
 
+    }
+
+    private void setNotification(long timeInMillis) {
+        AppAlarmHelper appAlarmHelper = new AppAlarmHelper();//setting Alarm
+        if (chkDailyNotification.isChecked()) {
+            appAlarmHelper.setAlarm(context, (int) contactId, true, timeInMillis);
+        } else {
+            appAlarmHelper.setAlarm(context, (int) contactId, false, timeInMillis);
+        }
     }
 
     private void chooseDateAndTime() {
@@ -184,7 +199,7 @@ public class AddTemplateMsgDialog extends Dialog {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         selectDateTime = selectDateTime + "-" + hourOfDay + "-" + minute;
                         Log.e("DTFormat", "" + selectDateTime);
-                        String dateTime = DateHelper.formatDate(selectDateTime, "dd-MM-yyyy-HH-mm", "dd MMM, yy : hh mm a");
+                        String dateTime = DateHelper.formatDate(selectDateTime, DateHelper.dd_MM_yyyy_HH_mm, DateHelper.dd_MMM_yy_hh_mm_a);
                         edtSelectTime.setText(dateTime);
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();

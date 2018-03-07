@@ -35,11 +35,9 @@ public final class DateHelper {
 //    '	escape for text	(Delimiter)	'Date=':Date=
 //            ''	single quote	d(Literal)	'o''clock':o'clock
 
-    public static final String HH_MM_SS = "HH:mm:ss";
-    public static final String HHmm = "HH:mm";
-    public static final String hhmm = "hh:mm";
+
     public static final String hhmmAMPM = "hh:mm a";
-    public static final String hhmmss = "hh:mm:ss";
+
 
     public static final String dd = "dd";
     public static final String MMM = "MMM";
@@ -47,43 +45,13 @@ public final class DateHelper {
 
     public static final String yyyyMMDD = "yyyy-MM-dd";
     public static final String DD_MMM_YYYY = "dd-MMM-yyyy";
-    public static final String MM_DD_YYYY = "MM-dd-yyyy";
     public static final String DD_MM_YYYY = "dd-MM-yyyy";
     public static final String DD_MM_YYYY_HH_MM_A = "dd-MM-yyyy hh:mm a";//STORED DATE FORMAT
     public static final String YYYY_MMDD_HHMMSS = "yyyyMMddHHmmss";
     public static final String DD_MM_YYYY_HH_MM = "dd-MM-yyyy HH:mm";
-    public static final String MMM_DD_YYYY = "MMM dd, yyyy";
-    public static final String dd_MM_yyyy_hh_mm_ss_a = "dd-MM-yyyy hh:mm:ss a";
 
-    public static final String yyyyMMddHHmmss = "yyyy-MM-dd HH:mm:ss";
-    public static final String HHmmssMMddyyyy = "HH:mm:ss MM-dd-yyyy";
-    public static final String EEMMddyyyyHHmmss = "EE, MM-dd-yyyy  HH:mm:ss";
-    public static final String mMMMDDYYYhhmmAMPM = MMM_DD_YYYY + " " + hhmmAMPM;
-    public static final String ddMMMMyyyy = "dd MMMM, yyyy";
-    public static final String ddMMMM = "dd MMMM";
-    public static final String ddMMM = "dd MMM";
-    public static final String ddMMMMyyyy_hhmmAMPM = "dd MMMM, yyyy hh:mm a";
-    public static final String emmmdd_hhmmsszyyyy = "E MMM dd HH:mm:ss Z yyyy";
-
-    public static final String MMM_DD_MM_YYYY = "MMM, dd-MM-yyyy";
-    public static final String dateIntFormat = "yyyyMMdd";
-    public static final String MonthFormat = "MMM - yyyy";
-    public static final String MonthFormatNextDate = "MMM\nyyyy";
-    public static final String MonthFullFormat = "MMMM - yyyy";
-
-
-    public static final String MoningTime1 = "04:00 AM";
-    public static final String MoningTime2 = "11:59 AM";
-
-    public static final String AfternoonTime1 = "12:00 PM";
-    public static final String AfternoonTime2 = "03:59 PM";
-
-    public static final String EveningTime1 = "04:00 PM";
-    public static final String EveningTime2 = "07:59 PM";
-
-    public static final String NightTime1 = "08:00 PM";
-    public static final String NightTime2 = "03:59 AM";
-    public static final String NightTime3 = "00:00 AM";
+    public static final String dd_MM_yyyy_HH_mm = "dd-MM-yyyy-HH-mm";//input for date selection dialog
+    public static final String dd_MMM_yy_hh_mm_a = "dd MMM, yy : hh mm a";//output for date selection dialog
 
 
     public static final int StartTime = 4;

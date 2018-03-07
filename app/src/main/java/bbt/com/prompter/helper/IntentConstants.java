@@ -6,4 +6,5 @@ package bbt.com.prompter.helper;
 
 class IntentConstants {
     public static final String INTENT_ALARM_ID = "INTENT_ALARM_ID";
+    public static final String CONTACT_ID = "CONTACT_ID";
 }

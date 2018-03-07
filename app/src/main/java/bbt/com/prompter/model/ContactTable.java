@@ -175,7 +175,7 @@ public class ContactTable {
     }
 
     // Getting single contact
-    public ContactTable getContact(int id, Context context) {
+    public static ContactTable getContact(int id, Context context) {
         SQLiteDatabase db = new DataBaseHandler(context).getWritableDatabase();
 
         Cursor cursor = db.rawQuery("select * from ContactTable where contactId =" + id, null);
