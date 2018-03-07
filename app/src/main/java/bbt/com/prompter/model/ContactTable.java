@@ -237,4 +237,12 @@ public class ContactTable {
         return contactList;
     }
 
+    // Deleting single contact
+    public static void deleteContact(long contactTableId, Context context) {
+        SQLiteDatabase db = new DataBaseHandler(context).getWritableDatabase();
+        db.delete(ContactTable.tableName, "contactId = ?",
+                new String[]{String.valueOf(contactTableId)});
+        db.close();
+    }
+
 }

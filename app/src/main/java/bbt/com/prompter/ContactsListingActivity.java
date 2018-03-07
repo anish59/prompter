@@ -104,7 +104,7 @@ public class ContactsListingActivity extends AppCompatActivity {
             @Override
             public void onItemClicked(String name, String phoneNo, String imgUri) {
                 Toast.makeText(context, "Name Clicked: " + name, Toast.LENGTH_SHORT).show();
-                new AddTemplateMsgDialog(context, ContactsListingActivity.this, name, phoneNo, imgUri);
+                new AddTemplateMsgDialog(ContactsListingActivity.this, name, phoneNo, imgUri);
             }
         });
         rvContacts.setLayoutManager(new LinearLayoutManager(context));

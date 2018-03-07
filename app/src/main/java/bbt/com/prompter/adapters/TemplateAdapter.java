@@ -23,9 +23,11 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.MyView
 
     private Context context;
     private List<ContactTable> templateList;
+    private OnEditClickedListener onEditClickedListener;
 
-    public TemplateAdapter(Context context) {
+    public TemplateAdapter(Context context, OnEditClickedListener onEditClickedListener) {
         this.context = context;
+        this.onEditClickedListener = onEditClickedListener;
     }
 
     @Override
@@ -53,6 +55,20 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.MyView
             holder.iconicitem.setIconicImage(templateList.get(position).getImgUri());
         }
 
+        imgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onEditClickedListener.onEdit(templateList.get(position).getNumber());
+            }
+        });
+
+        imgDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onEditClickedListener.onDelete(templateList.get(position).getContactId());
+            }
+        });
+
     }
 
     @Override
@@ -74,5 +90,11 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.MyView
             super(itemView);
             iconicitem = (IconicCardView) itemView.findViewById(R.id.iconic_item);
         }
+    }
+
+    public interface OnEditClickedListener {
+        void onEdit(String phoneNo);
+
+        void onDelete(long contactTableId);
     }
 }

@@ -47,10 +47,11 @@ public class AddTemplateMsgDialog extends Dialog {
     private long createdTime;
     private long contactId;
     private android.widget.TextView txtReminderFor;
+    private DataUpdatedListener dataUpdatedListener;
 
-    public AddTemplateMsgDialog(@NonNull Context context, Activity activity, String name, String phoneNo, String imgUri) {
-        super(context);
-        this.context = context;
+    public AddTemplateMsgDialog(Activity activity, String name, String phoneNo, String imgUri) {
+        super(activity);
+        this.context = activity;
         this.activity = activity;
         this.name = name;
         this.phoneNo = phoneNo;
@@ -58,9 +59,21 @@ public class AddTemplateMsgDialog extends Dialog {
         init(name);
         initListener();
         show();
-        if (isEditMode) {
-            setData(phoneNo);
-        }
+        isEditMode = false;
+
+    }
+
+    public AddTemplateMsgDialog(Activity activity, String phoneNo, DataUpdatedListener dataUpdatedListener) {
+        super(activity);
+        this.activity = activity;
+        this.context = activity;
+        this.phoneNo = phoneNo;
+        this.dataUpdatedListener = dataUpdatedListener;
+        isEditMode = true;
+        init("");
+        initListener();
+        setData(phoneNo);
+        show();
     }
 
     private void setData(String phoneNo) {
@@ -69,11 +82,18 @@ public class AddTemplateMsgDialog extends Dialog {
         if (contactTable == null) {
             return;
         }
+
+        txtReminderFor.setText(String.format("Get reminder for %s !", contactTable.getName()));
         edtSelectTime.setText(contactTable.getNotifyTime());
         edtTemplateMsg.setText(contactTable.getTemplate());
         createdTime = contactTable.getCreatedDateInt();
         contactId = contactTable.getContactId();
         chkDailyNotification.setChecked(contactTable.getIsDaily() == 1);
+
+        imgUri = contactTable.getImgUri();
+        name = contactTable.getName();
+        this.contactId = contactTable.getContactId();
+
     }
 
     private void initListener() {
@@ -127,11 +147,12 @@ public class AddTemplateMsgDialog extends Dialog {
         contactTable.setIsDaily(chkDailyNotification.isChecked() ? 1 : 0);
         contactTable.setNotifyTime(edtSelectTime.getText().toString().trim());
         contactTable.setTemplate(edtTemplateMsg.getText().toString().trim());
+
         contactTable.setNumber(phoneNo);
         contactTable.setName(name);
         contactTable.setImgUri(imgUri);
 
-        if (isEditMode) {
+        if (!isEditMode) {
             createdTime = Long.parseLong(DateHelper.formatDate(new Date(), DateHelper.YYYY_MMDD_HHMMSS));
             contactTable.setCreatedDateInt(createdTime);
             contactTable.setUpdatedDateInt(createdTime); // both will be created time as it is a new fresh entry
@@ -142,7 +163,9 @@ public class AddTemplateMsgDialog extends Dialog {
             contactTable.setCreatedDateInt(createdTime);
             contactTable.setUpdatedDateInt(updatedTime); // updatedTime will change everyTime we update Data and CreatedTime will stay same
 
+            contactTable.setContactId(contactId);
             ContactTable.updateContact(contactTable, context);
+            dataUpdatedListener.onUpdated();
         }
 
     }
@@ -198,5 +221,7 @@ public class AddTemplateMsgDialog extends Dialog {
         this.setCanceledOnTouchOutside(false);
     }
 
-
+    public interface DataUpdatedListener {
+        void onUpdated();
+    }
 }

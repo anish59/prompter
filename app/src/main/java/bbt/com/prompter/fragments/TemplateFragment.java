@@ -17,6 +17,7 @@ import java.util.List;
 import bbt.com.prompter.ContactsListingActivity;
 import bbt.com.prompter.R;
 import bbt.com.prompter.adapters.TemplateAdapter;
+import bbt.com.prompter.dialogs.AddTemplateMsgDialog;
 import bbt.com.prompter.model.ContactTable;
 
 /**
@@ -48,7 +49,6 @@ public class TemplateFragment extends Fragment {
 
     private void init() {
         initListener();
-
     }
 
     private void initListener() {
@@ -79,7 +79,23 @@ public class TemplateFragment extends Fragment {
     }
 
     private void initAdapter() {
-        templateAdapter = new TemplateAdapter(getActivity());
+        templateAdapter = new TemplateAdapter(getActivity(), new TemplateAdapter.OnEditClickedListener() {
+            @Override
+            public void onEdit(String phoneNo) {
+                new AddTemplateMsgDialog(getActivity(), phoneNo, new AddTemplateMsgDialog.DataUpdatedListener() {
+                    @Override
+                    public void onUpdated() {
+                        fetchRecords();
+                    }
+                });
+            }
+
+            @Override
+            public void onDelete(long contactTableId) {
+                ContactTable.deleteContact(contactTableId, getActivity());
+                fetchRecords();
+            }
+        });
         rvTemplates.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvTemplates.setAdapter(templateAdapter);
         if (firstVisit) {
@@ -93,6 +109,8 @@ public class TemplateFragment extends Fragment {
         contactTables = ContactTable.getAllContacts(getActivity());
         if (!contactTables.isEmpty()) {
             templateAdapter.setItems(contactTables);
+            rvTemplates.setVisibility(View.VISIBLE);
+            emptyLayout.setVisibility(View.GONE);
         } else {
             rvTemplates.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.VISIBLE);
