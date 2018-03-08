@@ -1,6 +1,7 @@
 package bbt.com.prompter.helper;
 
-import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,6 +12,8 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -41,8 +44,16 @@ public class NotificationHelper {
         NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
         mChannel.setSound(null, null);
 
+        Notification.Builder mBuilder;
+        mBuilder = new Notification.Builder(context);
+
+//        setActions(context, mBuilder);
 // Create a notification and set the notification channel.
-        Notification notification = new Notification.Builder(context)
+
+        setActions(context, mBuilder);
+
+
+        Notification notification = mBuilder
                 .setContentTitle(title)
                 .setContentText(content)
                 .setContentIntent(pendingIntent)
@@ -76,18 +87,20 @@ public class NotificationHelper {
         s.setSummaryText(content);
 
         //Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
+        setActions(context, mBuilder);
         Notification notification;
         notification = mBuilder
                 .setSmallIcon(getNotificationIcon())
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setTicker(title)
+
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setStyle(new Notification.BigTextStyle().bigText(content))
                 .build();
+
 
         Random random = new Random();
         int m = random.nextInt(9999 - 1000) + 1000;
@@ -98,10 +111,59 @@ public class NotificationHelper {
 
     }
 
+    public static void setActions(Context context, Notification.Builder mBuilder) {
+
+        String simOneName = FunctionHelper.getSimName(context, AppConstants.getCarrierName, 0);
+        String simTwoName = FunctionHelper.getSimName(context, AppConstants.getCarrierName, 1);
+        if ((simOneName != null && simOneName.equalsIgnoreCase(""))
+                && (simTwoName != null && simTwoName.equalsIgnoreCase(""))) {
+            UiHelper.showToast("No Sim Configuration Found", (Activity) context, true);
+            return;
+        }
+
+
+        if (simOneName != null) {
+            Intent SIM_ONE = new Intent(context, AppAlarmHelper.class);
+            SIM_ONE.putExtra(AppConstants.INTENT_ACTION_SIM_1, true);
+            SIM_ONE.setAction(AppConstants.ACTION_SIM1);
+            PendingIntent pISimOne = PendingIntent.getBroadcast(context, 12, SIM_ONE, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.addAction(new Notification.Action(0, simOneName, pISimOne));
+        }
+
+        if (simTwoName != null) {
+            Intent SIM_TWO = new Intent(context, AppAlarmHelper.class);
+            SIM_TWO.putExtra(AppConstants.INTENT_ACTION_SIM_1, true);
+            SIM_TWO.setAction(AppConstants.ACTION_SIM2);
+            PendingIntent pISimTwo = PendingIntent.getBroadcast(context, 13, SIM_TWO, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.addAction(new Notification.Action(0, simTwoName, pISimTwo));
+        }
+
+
+    }
+
     private static int getNotificationIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
         return useWhiteIcon ? R.mipmap.ic_launcher : R.mipmap.ic_launcher;
     }
 
+
+    public static class NotificationActionService extends IntentService { // class not in use
+
+        public NotificationActionService() {
+            super(NotificationActionService.class.getSimpleName());
+        }
+
+        @Override
+        protected void onHandleIntent(Intent intent) {
+            String action = intent.getAction();
+            System.out.println("Received notification action: " + action);
+            Log.e("Action: ", "Received notification action: " + action);
+            if (AppConstants.ACTION_SIM1.equals(action)) {
+                Toast.makeText(this, "Sim 1 Selected", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Sim 2 Selected", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 }

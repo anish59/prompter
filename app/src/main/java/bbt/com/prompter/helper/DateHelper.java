@@ -51,7 +51,7 @@ public final class DateHelper {
     public static final String DD_MM_YYYY_HH_MM = "dd-MM-yyyy HH:mm";
 
     public static final String dd_MM_yyyy_HH_mm = "dd-MM-yyyy-HH-mm";//input for date selection dialog
-    public static final String dd_MMM_yy_hh_mm_a = "dd MMM, yy : hh mm a";//output for date selection dialog
+    public static final String dd_MMM_yyyy_hh_mm_a = "dd MMM yyyy , hh:mm a";//output for date selection dialog
 
 
     public static final int StartTime = 4;

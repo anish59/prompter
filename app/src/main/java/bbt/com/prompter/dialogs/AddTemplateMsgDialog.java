@@ -151,7 +151,7 @@ public class AddTemplateMsgDialog extends Dialog {
         contactTable.setNumber(phoneNo);
         contactTable.setName(name);
         contactTable.setImgUri(imgUri);
-        Calendar calendar = DateHelper.stringToCalendar(contactTable.getNotifyTime(), DateHelper.dd_MMM_yy_hh_mm_a);
+        Calendar calendar = DateHelper.stringToCalendar(contactTable.getNotifyTime(), DateHelper.dd_MMM_yyyy_hh_mm_a);
 
         if (!isEditMode) {
             createdTime = Long.parseLong(DateHelper.formatDate(new Date(), DateHelper.YYYY_MMDD_HHMMSS));
@@ -160,8 +160,10 @@ public class AddTemplateMsgDialog extends Dialog {
 
             ContactTable.addContact(contactTable, context);
 
+            // first query wrt to phone to get inserted contactId inOrder to set alarm
+            contactId = ContactTable.getContactWithNumber(phoneNo, context).getContactId();
+            setNotification(calendar.getTimeInMillis(), (int) contactId);
 
-            setNotification(calendar.getTimeInMillis());
         } else {
             long updatedTime = Long.parseLong(DateHelper.formatDate(new Date(), DateHelper.YYYY_MMDD_HHMMSS));
             contactTable.setCreatedDateInt(createdTime);
@@ -171,17 +173,20 @@ public class AddTemplateMsgDialog extends Dialog {
             ContactTable.updateContact(contactTable, context);
             dataUpdatedListener.onUpdated();
 
-            setNotification(calendar.getTimeInMillis());
+            setNotification(calendar.getTimeInMillis(), (int) contactId);
         }
 
     }
 
-    private void setNotification(long timeInMillis) {
+    private void setNotification(long timeInMillis, int contactId) {
         AppAlarmHelper appAlarmHelper = new AppAlarmHelper();//setting Alarm
         if (chkDailyNotification.isChecked()) {
-            appAlarmHelper.setAlarm(context, (int) contactId, true, timeInMillis);
+            appAlarmHelper.setAlarm(context
+                    , contactId
+                    , true, timeInMillis);
+
         } else {
-            appAlarmHelper.setAlarm(context, (int) contactId, false, timeInMillis);
+            appAlarmHelper.setAlarm(context, contactId, false, timeInMillis);
         }
     }
 
@@ -193,13 +198,14 @@ public class AddTemplateMsgDialog extends Dialog {
 
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
                 selectDateTime = dayOfMonth + "-" + month + "-" + year;
                 new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         selectDateTime = selectDateTime + "-" + hourOfDay + "-" + minute;
                         Log.e("DTFormat", "" + selectDateTime);
-                        String dateTime = DateHelper.formatDate(selectDateTime, DateHelper.dd_MM_yyyy_HH_mm, DateHelper.dd_MMM_yy_hh_mm_a);
+                        String dateTime = DateHelper.formatDate(selectDateTime, DateHelper.dd_MM_yyyy_HH_mm, DateHelper.dd_MMM_yyyy_hh_mm_a);
                         edtSelectTime.setText(dateTime);
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show();

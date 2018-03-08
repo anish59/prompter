@@ -18,6 +18,8 @@ import bbt.com.prompter.ContactsListingActivity;
 import bbt.com.prompter.R;
 import bbt.com.prompter.adapters.TemplateAdapter;
 import bbt.com.prompter.dialogs.AddTemplateMsgDialog;
+import bbt.com.prompter.helper.AppAlarmHelper;
+import bbt.com.prompter.helper.DummyNotification;
 import bbt.com.prompter.model.ContactTable;
 
 /**
@@ -73,7 +75,8 @@ public class TemplateFragment extends Fragment {
         fabAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ContactsListingActivity.class));
+//                startActivity(new Intent(getActivity(), ContactsListingActivity.class));
+                DummyNotification.displayNotification(getActivity());
             }
         });
     }
@@ -94,6 +97,8 @@ public class TemplateFragment extends Fragment {
             public void onDelete(long contactTableId) {
                 ContactTable.deleteContact(contactTableId, getActivity());
                 fetchRecords();
+                AppAlarmHelper appAlarmHelper = new AppAlarmHelper();
+                appAlarmHelper.cancelAlarm(getActivity(), (int) contactTableId);
             }
         });
         rvTemplates.setLayoutManager(new LinearLayoutManager(getActivity()));

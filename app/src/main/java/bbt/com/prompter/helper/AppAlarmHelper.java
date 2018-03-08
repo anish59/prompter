@@ -8,9 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
 
 import bbt.com.prompter.model.ContactTable;
 
@@ -19,19 +19,22 @@ import bbt.com.prompter.model.ContactTable;
  */
 
 public class AppAlarmHelper extends BroadcastReceiver {
-    private static final String ACTION_1 = "Shut Off";
     private static AlarmManager alarmManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action;
-//        action = intent.getAction();
+        action = intent.getAction();
 
-        if (intent == null) {
+        if (action != null) {
+            setActionListeners(action);
+        }
+
+        int fetchingId = intent.getIntExtra(AppConstants.CONTACT_ID, 0);
+        ContactTable contactDetail = ContactTable.getContact(fetchingId, context);
+        if (contactDetail == null) {
             return;
         }
-        int fetchingId = intent.getIntExtra(IntentConstants.CONTACT_ID, 0);
-        ContactTable contactDetail = ContactTable.getContact(fetchingId, context);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationHelper.sendSimpleNotificationOreo(context, contactDetail.getName(), contactDetail.getTemplate());
         } else {
@@ -39,21 +42,36 @@ public class AppAlarmHelper extends BroadcastReceiver {
         }
     }
 
+    public void setActionListeners(String action) {
+        Log.e("Action: ", "Received notification action: " + action);
+        if (AppConstants.ACTION_SIM1.equals(action)) {
+            Log.e("Sim", "One");
+        } else if (AppConstants.ACTION_SIM2.equals(action)) {
+            Log.e("Sim", "Two");
+        }
+    }
+
 
     public void setAlarm(Context context, int contactID, boolean isRepeating, long timeInMilliSec) {
         cancelAlarm(context, contactID);
-
+        Date date = new Date(timeInMilliSec);
+        Log.e("date: ", "" + date);
+        /*if (date.before(Calendar.getInstance().getTime())) {
+            Log.e("TimeError: ", "entered time is in past, plz check it buddy");
+            return;
+        }*/
         Intent intent = new Intent(context, AppAlarmHelper.class);
-        intent.putExtra(IntentConstants.INTENT_ALARM_ID, contactID); //using alarmId same as contactId
-        intent.putExtra(IntentConstants.CONTACT_ID, contactID);
+        intent.putExtra(AppConstants.INTENT_ALARM_ID, contactID); //using alarmId same as contactId
+        intent.putExtra(AppConstants.CONTACT_ID, contactID);
 
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, contactID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmMgr = getAlarmManager(context);
 
+
         if (isRepeating) {
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMilliSec, AlarmManager.INTERVAL_DAY, alarmIntent);
         } else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMilliSec, alarmIntent);
+            alarmMgr.set(AlarmManager.RTC_WAKEUP, timeInMilliSec, alarmIntent);
         }
         initBootAlarm(context);
     }

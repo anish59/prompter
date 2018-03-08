@@ -182,10 +182,12 @@ public class ContactTable {
         if (cursor != null) {
             cursor.moveToFirst();
         }
-
-        ContactTable contact = new ContactTable(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
-                cursor.getLong(5), cursor.getLong(6), cursor.getLong(7), cursor.getString(8));
-        // return contact
+        ContactTable contact = null;
+        if (cursor != null && cursor.getCount() != 0) {
+            contact = new ContactTable(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4),
+                    cursor.getLong(5), cursor.getLong(6), cursor.getLong(7), cursor.getString(8));
+            // return contact
+        }
         return contact;
     }
 
