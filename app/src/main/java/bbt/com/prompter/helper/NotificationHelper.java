@@ -12,9 +12,12 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Random;
 
 import bbt.com.prompter.MainActivity;
@@ -26,6 +29,8 @@ import bbt.com.prompter.R;
 
 public class NotificationHelper {
 
+
+    private static String carrierName = "";
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void sendSimpleNotificationOreo(Context context, String title, String content) {
@@ -111,34 +116,54 @@ public class NotificationHelper {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     public static void setActions(Context context, Notification.Builder mBuilder) {
+        String simOneName = "", simTwoName = "";
 
-        String simOneName = FunctionHelper.getSimName(context, AppConstants.getCarrierName, 0);
-        String simTwoName = FunctionHelper.getSimName(context, AppConstants.getCarrierName, 1);
-        if ((simOneName != null && simOneName.equalsIgnoreCase(""))
-                && (simTwoName != null && simTwoName.equalsIgnoreCase(""))) {
-            UiHelper.showToast("No Sim Configuration Found", (Activity) context, true);
-            return;
+
+        SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
+
+        List<SubscriptionInfo> subscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
+
+        if (subscriptionInfoList != null && subscriptionInfoList.size() > 0) {
+            for (int i = 0; i < subscriptionInfoList.size(); i++) {
+                if (simOneName.equals("")) {
+                    simOneName = subscriptionInfoList.get(i).getCarrierName().toString();
+                } else {
+                    simTwoName = subscriptionInfoList.get(i).getCarrierName().toString();
+                    break;// so two names are already acquired now we need to break the loop and proceed
+                }
+            }
+
         }
 
 
-        if (simOneName != null) {
-            Intent SIM_ONE = new Intent(context, AppAlarmHelper.class);
-            SIM_ONE.putExtra(AppConstants.INTENT_ACTION_SIM_1, true);
-            SIM_ONE.setAction(AppConstants.ACTION_SIM1);
-            PendingIntent pISimOne = PendingIntent.getBroadcast(context, 12, SIM_ONE, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.addAction(new Notification.Action(0, simOneName, pISimOne));
+        {
+
+            if ((simOneName != null && simOneName.equalsIgnoreCase(""))
+                    && (simTwoName != null && simTwoName.equalsIgnoreCase(""))) {
+                UiHelper.showToast("No Sim Configuration Found", (Activity) context, true);
+                return;
+            }
+
+
+            if (simOneName != null) {
+                Intent SIM_ONE = new Intent(context, AppAlarmHelper.class);
+                SIM_ONE.putExtra(AppConstants.INTENT_ACTION_SIM_1, true);
+                SIM_ONE.setAction(AppConstants.ACTION_SIM1);
+                PendingIntent pISimOne = PendingIntent.getBroadcast(context, 12, SIM_ONE, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.addAction(new Notification.Action(0, simOneName, pISimOne));
+            }
+
+            if (simTwoName != null) {
+                Intent SIM_TWO = new Intent(context, AppAlarmHelper.class);
+                SIM_TWO.putExtra(AppConstants.INTENT_ACTION_SIM_1, true);
+                SIM_TWO.setAction(AppConstants.ACTION_SIM2);
+                PendingIntent pISimTwo = PendingIntent.getBroadcast(context, 13, SIM_TWO, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.addAction(new Notification.Action(0, simTwoName, pISimTwo));
+            }
+
         }
-
-        if (simTwoName != null) {
-            Intent SIM_TWO = new Intent(context, AppAlarmHelper.class);
-            SIM_TWO.putExtra(AppConstants.INTENT_ACTION_SIM_1, true);
-            SIM_TWO.setAction(AppConstants.ACTION_SIM2);
-            PendingIntent pISimTwo = PendingIntent.getBroadcast(context, 13, SIM_TWO, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.addAction(new Notification.Action(0, simTwoName, pISimTwo));
-        }
-
-
     }
 
     private static int getNotificationIcon() {

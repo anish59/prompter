@@ -14,5 +14,5 @@ class AppConstants {
     public static int NotificationActionID = 1002;
     static final String ACTION_SIM1 = "ACTION_SIM1";
     static final String ACTION_SIM2 = "ACTION_SIM2";
-    static final String getCarrierName = "getCarrierName";
+    static final String getCarrierName = "SimOperatorName";
 }

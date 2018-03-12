@@ -7,6 +7,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import bbt.com.prompter.dialogs.AddTemplateMsgDialog;
 import bbt.com.prompter.helper.AppAlarmHelper;
 import bbt.com.prompter.helper.DummyNotification;
 import bbt.com.prompter.model.ContactTable;
+
+import static android.content.Context.TELEPHONY_SERVICE;
 
 /**
  * Created by anish on 08-01-2018.
@@ -75,8 +79,14 @@ public class TemplateFragment extends Fragment {
         fabAddContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(getActivity(), ContactsListingActivity.class));
-                DummyNotification.displayNotification(getActivity());
+                startActivity(new Intent(getActivity(), ContactsListingActivity.class));
+//                DummyNotification.displayNotification(getActivity());
+
+//                TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(TELEPHONY_SERVICE);
+//                assert tm != null;
+//                String networkOperator = tm.getSimOperatorName();
+//
+//                Log.e("simName", "" + networkOperator);
             }
         });
     }
