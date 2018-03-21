@@ -3,6 +3,7 @@ package bbt.com.prompter.helper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -107,4 +108,15 @@ public class FunctionHelper {
         //Log.i("Reflection", "Result: " + result);
         return result;
     }
+
+    public static String filterNumber(String number) {
+        String regex = "[^a-zA-Z0-9]";
+        String res = number.replaceAll(regex, "");
+        Log.e("res", "" + res);
+        if (res.length() > 10) {
+            res = res.substring(2);//to make it 10 digit if its already not
+        }
+        return res;
+    }
+
 }

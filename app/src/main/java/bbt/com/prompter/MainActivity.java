@@ -1,7 +1,10 @@
 package bbt.com.prompter;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,10 +21,15 @@ import com.gun0912.tedpermission.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import bbt.com.prompter.dialogs.SendMessageDialog;
 import bbt.com.prompter.fragments.HistoryFragment;
 import bbt.com.prompter.fragments.TemplateFragment;
+import bbt.com.prompter.helper.AppConstants;
+import bbt.com.prompter.helper.DeliverReceiver;
 import bbt.com.prompter.helper.FunctionHelper;
+import bbt.com.prompter.helper.SentReceiver;
 import bbt.com.prompter.helper.UiHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,6 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
         initFragments();
         tabs.setupWithViewPager(viewpager);
+        getIntentData();
+    }
+
+    private void getIntentData() {
+        Intent intent = getIntent();
+        if (intent.getStringExtra(AppConstants.INTENT_NAME) != null) {
+            String name = intent.getStringExtra(AppConstants.INTENT_NAME);
+            String no = intent.getStringExtra(AppConstants.INTENT_CONTACT);
+            String msg = intent.getStringExtra(AppConstants.INTENT_MSG);
+            new SendMessageDialog(context, name, msg, no);
+        }
     }
 
     private void initFragments() {
@@ -64,10 +83,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    SmsManager smsManager = SmsManager.getDefault();
+
+
+                    SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(01);
                     smsManager.sendTextMessage("8320552183", null, "Alaa vandra", null, null);
-                    Toast.makeText(getApplicationContext(), "Message Sent",
-                            Toast.LENGTH_LONG).show();
+
                 } catch (Exception ex) {
                     Toast.makeText(getApplicationContext(), ex.getMessage().toString(),
                             Toast.LENGTH_LONG).show();
@@ -108,7 +128,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void askPermissions() {
-        FunctionHelper.setPermission(context, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS}, new PermissionListener() {
+        FunctionHelper.setPermission(context, new String[]{Manifest.permission.SEND_SMS
+                , Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CONTACTS
+                , Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_SMS
+                , Manifest.permission.RECEIVE_SMS}, new PermissionListener() {
             @Override
             public void onPermissionGranted() {
 

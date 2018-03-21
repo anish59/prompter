@@ -17,4 +17,10 @@
     <string name="daily_notify_me">Daily Notify Me</string>
     <string name="opps">Opps!</string>
     <string name="nothing_found">Nothing Found !!</string>
+    <string name="send_message">Send Message</string>
+    <string name="to_Emma">Emma</string>
+    <string name="other">Other</string>
+    <string name="sim_1">Sim 1</string>
+    <string name="sim_2">Sim 2</string>
+    <string name="send">Send</string>
 </resources>

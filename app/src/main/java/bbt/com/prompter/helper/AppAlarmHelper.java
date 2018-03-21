@@ -1,5 +1,6 @@
 package bbt.com.prompter.helper;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Date;
 
@@ -21,10 +23,15 @@ import bbt.com.prompter.model.ContactTable;
 public class AppAlarmHelper extends BroadcastReceiver {
     private static AlarmManager alarmManager;
 
+
+    public AppAlarmHelper() {
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action;
         action = intent.getAction();
+
 
         if (action != null) {
             setActionListeners(action);
@@ -36,21 +43,22 @@ public class AppAlarmHelper extends BroadcastReceiver {
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationHelper.sendSimpleNotificationOreo(context, contactDetail.getName(), contactDetail.getTemplate());
+            NotificationHelper.sendSimpleNotificationOreo(context, contactDetail.getName(), contactDetail.getTemplate(), contactDetail.getNumber());
         } else {
-            NotificationHelper.sendSimpleNotificationNormal(context, contactDetail.getName(), contactDetail.getTemplate());
+            NotificationHelper.sendSimpleNotificationNormal(context, contactDetail.getName(), contactDetail.getTemplate(), contactDetail.getNumber());
         }
     }
 
     public void setActionListeners(String action) {
         Log.e("Action: ", "Received notification action: " + action);
+
         if (AppConstants.ACTION_SIM1.equals(action)) {
             Log.e("Sim", "One");
+
         } else if (AppConstants.ACTION_SIM2.equals(action)) {
             Log.e("Sim", "Two");
         }
     }
-
 
     public void setAlarm(Context context, int contactID, boolean isRepeating, long timeInMilliSec) {
         cancelAlarm(context, contactID);
@@ -75,6 +83,7 @@ public class AppAlarmHelper extends BroadcastReceiver {
         }
         initBootAlarm(context);
     }
+
 
     public void cancelAlarm(Context context, int requestCode) {
 

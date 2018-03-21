@@ -58,7 +58,6 @@ public class DummyNotification {
             String action = intent.getAction();
             Log.e("action", "Received notification action: " + action);
             if (ACTION_1.equals(action)) {
-                // TODO: handle action 1.
                 Log.e("Action1", "Worked");
                 // If you want to cancel the notification: NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID);
             }else{

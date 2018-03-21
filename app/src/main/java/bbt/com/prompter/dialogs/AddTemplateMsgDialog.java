@@ -245,4 +245,6 @@ public class AddTemplateMsgDialog extends Dialog {
     public interface DataUpdatedListener {
         void onUpdated();
     }
+
+
 }

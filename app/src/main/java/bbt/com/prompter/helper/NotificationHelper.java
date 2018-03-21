@@ -31,9 +31,11 @@ public class NotificationHelper {
 
 
     private static String carrierName = "";
+    private static int simOneSubId, simTwoSubId;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void sendSimpleNotificationOreo(Context context, String title, String content) {
+    public static void sendSimpleNotificationOreo(Context context, String title, String content, String number) {
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -77,12 +79,17 @@ public class NotificationHelper {
     }
 
 
-    public static void sendSimpleNotificationNormal(Context context, String title, String content) {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    public static void sendSimpleNotificationNormal(Context context, String title, String content, String number) {
 
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        Intent intent1 = new Intent(context, MainActivity.class);
+        intent1.putExtra(AppConstants.INTENT_NAME, title);//title contains name here
+        intent1.putExtra(AppConstants.INTENT_MSG, content);
+        intent1.putExtra(AppConstants.INTENT_CONTACT, number);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder mBuilder;
         mBuilder = new Notification.Builder(context);
@@ -129,14 +136,15 @@ public class NotificationHelper {
             for (int i = 0; i < subscriptionInfoList.size(); i++) {
                 if (simOneName.equals("")) {
                     simOneName = subscriptionInfoList.get(i).getCarrierName().toString();
+                    simOneSubId = subscriptionInfoList.get(i).getSubscriptionId();
                 } else {
                     simTwoName = subscriptionInfoList.get(i).getCarrierName().toString();
+                    simTwoSubId = subscriptionInfoList.get(i).getSubscriptionId();
                     break;// so two names are already acquired now we need to break the loop and proceed
                 }
             }
 
         }
-
 
         {
 
@@ -190,5 +198,6 @@ public class NotificationHelper {
             }
         }
     }
+
 
 }
