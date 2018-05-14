@@ -49,6 +49,7 @@ public class NotificationHelper {
         CharSequence name = "My Notification";// The user-visible name of the channel.
         int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+
         mChannel.setSound(null, null);
 
         Notification.Builder mBuilder;
