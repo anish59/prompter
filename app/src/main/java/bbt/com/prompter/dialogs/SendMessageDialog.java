@@ -1,13 +1,16 @@
 package bbt.com.prompter.dialogs;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -44,7 +47,6 @@ public class SendMessageDialog extends Dialog {
     private String contactNo;
     private TextView txtName;
     private TextView txtMsg;
-    private android.widget.ImageView imgClose;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -56,20 +58,21 @@ public class SendMessageDialog extends Dialog {
 
         this.contactNo = FunctionHelper.filterNumber(number);
         init();
+        show();
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_sms_layout, null, false);
-        this.imgClose = (ImageView) view.findViewById(R.id.imgClose);
+//        this.imgClose = (ImageView) view.findViewById(R.id.imgClose);
         this.txtMsg = (TextView) view.findViewById(R.id.txtMsg);
         this.txtName = (TextView) view.findViewById(R.id.txtName);
         this.btnSim2 = (TextView) view.findViewById(R.id.btnSim2);
         this.btnSim1 = (TextView) view.findViewById(R.id.btnSim1);
         this.btnOther = (TextView) view.findViewById(R.id.btnOther);
         setDialogProps(view);
-        show();
+
 
         txtName.setText(contactName);
         txtMsg.setText(msg);
@@ -80,12 +83,12 @@ public class SendMessageDialog extends Dialog {
     }
 
     private void initListener() {
-        imgClose.setOnClickListener(new View.OnClickListener() {
+        /*imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
-        });
+        });*/
 
         btnSim1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +141,10 @@ public class SendMessageDialog extends Dialog {
 
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
 
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "Please give the permission unless it won't work!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         List<SubscriptionInfo> subscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
 
         if (subscriptionInfoList != null && subscriptionInfoList.size() > 0) {

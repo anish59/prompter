@@ -10,11 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:borderColor="@color/colorPrimaryDark"
         app:cardBgColor="@color/colorWhite"
         app:cardElevation="2dp"
         app:imgHeight="70dp"
         app:imgSrc="@drawable/ic_avatar"
-        app:imgWidth="70dp" />
+        app:imgWidth="70dp"
+        app:tintColor="@color/colorPrimaryDark" />
 
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import bbt.com.iconiccardview.widgets.CircleImageView;
  */
 
 public class IconicCardView extends LinearLayout {
+    private int tintColor;
     private int cardBgColor;
     private int cardElevation;
     private Drawable imgSrc;
@@ -29,6 +30,7 @@ public class IconicCardView extends LinearLayout {
     private LinearLayout insideContainer;
     private CircleImageView imgHolder;
     private CardView cardView;
+    private int borderColor;
 
     public IconicCardView(Context context) {
         super(context);
@@ -45,6 +47,8 @@ public class IconicCardView extends LinearLayout {
             cardElevation = (int) a.getDimension(R.styleable.IconicCardView_cardElevation, getResources().getDimension(R.dimen.card_elevation));
             imgSrc = a.getDrawable(R.styleable.IconicCardView_imgSrc);
             cardBgColor = a.getColor(R.styleable.IconicCardView_cardBgColor, 0);
+            borderColor = a.getColor(R.styleable.IconicCardView_borderColor, 0);
+            tintColor = a.getColor(R.styleable.IconicCardView_tintColor, 0);
         } finally {
             a.recycle();
         }
@@ -70,7 +74,8 @@ public class IconicCardView extends LinearLayout {
         imgHolder.getLayoutParams().width = imgWidth;
         imgHolder.getLayoutParams().height = imgHeight;
         imgHolder.setImageDrawable(imgSrc);
-
+        imgHolder.setBorderColor(borderColor);
+        imgHolder.setColorFilter(tintColor);
 
         cardView.setMinimumHeight(2 * imgHeight);//setting cardView minimum height
 

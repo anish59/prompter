@@ -22,7 +22,7 @@
                 android:layout_height="70dp"
                 android:layout_margin="4dp"
                 android:src="@drawable/ic_avatar"
-                app:civ_border_color="#43A047"
+                app:civ_border_color="@color/colorPrimaryDark"
                 app:civ_border_width="2dp" />
 
             <LinearLayout

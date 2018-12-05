@@ -1,5 +1,6 @@
 package bbt.com.prompter.helper;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.IntentService;
 import android.app.Notification;
@@ -8,9 +9,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -35,12 +38,16 @@ public class NotificationHelper {
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void sendSimpleNotificationOreo(Context context, String title, String content, String number) {
+    public static void sendSimpleNotificationAboveOreo(Context context, String title, String content, String number) {
 
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(AppConstants.INTENT_NAME, title);//title contains name here
+        intent.putExtra(AppConstants.INTENT_MSG, content);
+        intent.putExtra(AppConstants.INTENT_CONTACT, number);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         Random random = new Random();
@@ -63,6 +70,7 @@ public class NotificationHelper {
 
         Notification notification = mBuilder
                 .setContentTitle(title)
+                .setAutoCancel(true)
                 .setContentText(content)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(getNotificationIcon())
@@ -110,6 +118,7 @@ public class NotificationHelper {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
+                .setAutoCancel(true)
                 .setContentText(content)
                 .setStyle(new Notification.BigTextStyle().bigText(content))
                 .build();
@@ -131,6 +140,10 @@ public class NotificationHelper {
 
         SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
 
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "It won't work unless you grant the permission! :/", Toast.LENGTH_SHORT).show();
+            return;
+        }
         List<SubscriptionInfo> subscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
 
         if (subscriptionInfoList != null && subscriptionInfoList.size() > 0) {

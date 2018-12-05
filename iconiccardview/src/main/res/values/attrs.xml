@@ -7,6 +7,7 @@
         <!-- {@deprecated Use civ_circlebackground_color instead.} -->
         <attr name="civ_fill_color" format="color" />
         <attr name="civ_circle_background_color" format="color" />
+        <attr name="civ_tint_color" format="color" />
     </declare-styleable>
     <declare-styleable name="IconicCardView">
         <attr name="imgHeight" format="dimension" />
@@ -14,6 +15,8 @@
         <attr name="cardElevation" format="dimension" />
         <attr name="imgSrc" format="reference" />
         <attr name="cardBgColor" format="color" />
+        <attr name="borderColor" format="color" />
+        <attr name="tintColor" format="color" />
     </declare-styleable>
 
 </resources>

@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(01);
-                    smsManager.sendTextMessage("8320552183", null, "Alaa vandra", null, null);
+                    smsManager.sendTextMessage("9974686376", null, "Test Successful", null, null);
 
                 } catch (Exception ex) {
                     Toast.makeText(getApplicationContext(), ex.getMessage().toString(),
