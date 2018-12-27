@@ -14,7 +14,7 @@
         app:cardBgColor="@color/colorWhite"
         app:cardElevation="2dp"
         app:imgHeight="70dp"
-        app:imgSrc="@drawable/ic_avatar"
+        app:imgSrc="@drawable/ic_avatar_2"
         app:imgWidth="70dp"
         app:tintColor="@color/colorPrimaryDark" />
 

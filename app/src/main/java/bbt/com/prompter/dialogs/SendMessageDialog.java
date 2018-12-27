@@ -47,6 +47,7 @@ public class SendMessageDialog extends Dialog {
     private String contactNo;
     private TextView txtName;
     private TextView txtMsg;
+    private ImageView imgClose;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
@@ -65,7 +66,7 @@ public class SendMessageDialog extends Dialog {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
     private void init() {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_sms_layout, null, false);
-//        this.imgClose = (ImageView) view.findViewById(R.id.imgClose);
+        this.imgClose = (ImageView) view.findViewById(R.id.imgClose);
         this.txtMsg = (TextView) view.findViewById(R.id.txtMsg);
         this.txtName = (TextView) view.findViewById(R.id.txtName);
         this.btnSim2 = (TextView) view.findViewById(R.id.btnSim2);
@@ -83,12 +84,12 @@ public class SendMessageDialog extends Dialog {
     }
 
     private void initListener() {
-        /*imgClose.setOnClickListener(new View.OnClickListener() {
+        imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
             }
-        });*/
+        });
 
         btnSim1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +104,18 @@ public class SendMessageDialog extends Dialog {
             public void onClick(View v) {
                 int subSimTwoId = (int) btnSim2.getTag();
                 sendMessage(subSimTwoId);
+            }
+        });
+
+        btnOther.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String shareBody = msg;
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Message for " + contactName);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                context.startActivity(Intent.createChooser(sharingIntent, context.getString(R.string.share_using)));
             }
         });
     }
@@ -180,5 +193,6 @@ public class SendMessageDialog extends Dialog {
         getWindow().setAttributes(lp);
         getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
         this.setCanceledOnTouchOutside(false);
+        this.setCancelable(false);
     }
 }

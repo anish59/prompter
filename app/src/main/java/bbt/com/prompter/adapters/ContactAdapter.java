@@ -54,7 +54,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         holder.txtContactName.setText(contactListItems.get(position).getName());
         holder.txtContactNumber.setText(contactListItems.get(position).getNumber());
         Glide.with(context).load(contactListItems.get(position).getImgUri())
-                .apply(new RequestOptions().placeholder(R.drawable.ic_avatar).error(R.drawable.ic_avatar))
+                .apply(new RequestOptions().placeholder(R.drawable.ic_avatar_2).error(R.drawable.ic_avatar_2))
                 .thumbnail(0.5f)
                 .into(holder.contactImage);
 
